@@ -7,11 +7,11 @@ from django.utils.text import slugify
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'EcommerceWebsite.settings')
 django.setup()
 
-from apiApp.models import product_category, product, custom_user
+from apiApp.models import ProductCategory, Product, customuser
 
 def create_superuser():
-    if not custom_user.objects.filter(username='admin').exists():
-        custom_user.objects.create_superuser(
+    if not customuser.objects.filter(username='admin').exists():
+        customuser.objects.create_superuser(
             username='admin',
             email='admin@example.com',
             password='admin123'
@@ -39,7 +39,7 @@ def seed_categories():
     ]
 
     for cat in categories:
-        category = product_category.objects.create(
+        category = ProductCategory.objects.create(
             name=cat['name'],
             slug=slugify(cat['name']),
             image=cat['image']
@@ -47,7 +47,7 @@ def seed_categories():
         print(f'Created category: {category.name}')
 
 def seed_products():
-    categories = product_category.objects.all()
+    categories = ProductCategory.objects.all()
     
     products = [
         {
@@ -85,8 +85,8 @@ def seed_products():
     ]
 
     for prod in products:
-        category = product_category.objects.get(name=prod['category'])
-        product.objects.create(
+        category = ProductCategory.objects.get(name=prod['category'])
+        Product.objects.create(
             name=prod['name'],
             description=prod['description'],
             price=prod['price'],
@@ -104,13 +104,13 @@ def main():
     create_superuser()
     
     # Create categories
-    if product_category.objects.count() == 0:
+    if ProductCategory.objects.count() == 0:
         seed_categories()
     else:
         print('Categories already exist, skipping...')
     
     # Create products
-    if product.objects.count() == 0:
+    if Product.objects.count() == 0:
         seed_products()
     else:
         print('Products already exist, skipping...')

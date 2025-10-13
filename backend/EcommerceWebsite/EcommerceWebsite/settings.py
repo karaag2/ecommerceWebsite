@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'apiApp',
     'corsheaders',
+    'zomona'
 ]
 
 MIDDLEWARE = [
@@ -127,4 +128,5 @@ MEDIA_ROOT = BASE_DIR/'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'apiApp.custom_user'
+# Use lowercase for model reference in AUTH_USER_MODEL
+AUTH_USER_MODEL = 'apiApp.CustomUser'
