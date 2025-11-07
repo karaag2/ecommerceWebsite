@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Cart, CustomUser,Product, ProductCategory, CartItem
+from .models import Cart, CustomUser,Product, ProductCategory, CartItem, ProductRating, Wishlist, OrderItem, Order, CustomerAddress, Review
 # Register your models here.
 class custom_user_admin (UserAdmin):
     list_display = ['username', 'email', 'first_name']
@@ -30,3 +30,14 @@ class cart_items_admin(admin.ModelAdmin):
 
     get_sub_total.short_description = "Sub Total"
 admin.site.register(CartItem, cart_items_admin)
+
+class ProductRatingAdmin(admin.ModelAdmin):
+    list_display = ("product", "average_rating", "total_reviews")
+admin.site.register(ProductRating, ProductRatingAdmin)
+
+
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ("user", "product")
+admin.site.register(Wishlist, WishlistAdmin)
+
+admin.site.register([Order, OrderItem, CustomerAddress,Review ])

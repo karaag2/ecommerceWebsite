@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django.conf import settings
 
@@ -84,7 +85,7 @@ class Review(models.Model):
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.IntegerField()
+    rating = models.IntegerField(choices=RATING_CHOICES)
     comment = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -95,9 +96,10 @@ class Review(models.Model):
     class Meta:
         unique_together = ('product', 'user')  # Ensure one review per user per product
         ordering = ['-created']
+        
 class ProductRating(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='rating')
-    average_rating = models.FloatField(default=0.0)
+    average_rating = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
     total_reviews = models.PositiveIntegerField(default=0)
 
     def __str__(self):
