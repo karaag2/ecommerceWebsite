@@ -26,13 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#vgrh9$ac1w_y1t_6%d8f-i$3**y146t=m$tc(kemo8@tv(sue'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://agustin-jaillike-zander.ngrok-free.dev"]
+# CSRF_TRUSTED_ORIGINS = [""]
 
 # Application definition
 
@@ -48,13 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'zomona'
 ]
-ALLOWED_ORIGINS = [
-"http://localhost:3000",
-"http://127.0.0.1:3000",
-"http://localhost:3000/",
-"http://localhost:8000",
-"http://127.0.0.1:8000",
-]
+ALLOWED_ORIGINS = ["http://localhost:3000",]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -94,20 +88,13 @@ WSGI_APPLICATION = 'EcommerceWebsite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'NLSlXJeZycikVmzpTQJTEpTXFvkeRCuw',
-        'HOST' : 'hopper.proxy.rlwy.net',
-        'PORT': '26819'
+        'NAME': os.getenv('PG_NAME'),
+        'USER': os.getenv('PG_USER'),
+        'PASSWORD': os.getenv('PG_PASSWORD'),
+        'HOST' : os.getenv('PG_HOST'),
+        'PORT': os.getenv('PG_PORT')
     }
 }
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.getenv('DATABASE_URL'),
-#         conn_max_age=600,
-#         conn_health_checks=True,
-#     )
-# }
 
 
 # Password validation
