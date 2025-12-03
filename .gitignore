@@ -29,7 +29,8 @@ media/
 Capture d'écran 2025-10-12 135353.png
 
 # Virtual Environment
-.env
+*.env
+EcommerceWebsite/.env
 .venv
 env/
 venv/
