@@ -102,3 +102,6 @@ Thumbs.db
 .env 
 EcommerceWebsite/.env 
 *.env 
+.env 
+EcommerceWebsite/.env 
+*.env 
