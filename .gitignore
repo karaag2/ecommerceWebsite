@@ -99,3 +99,6 @@ yarn.lock
 # System Files
 .DS_Store
 Thumbs.db
+.env 
+EcommerceWebsite/.env 
+*.env 
