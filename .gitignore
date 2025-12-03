@@ -31,6 +31,7 @@ Capture d'écran 2025-10-12 135353.png
 # Virtual Environment
 *.env
 EcommerceWebsite/.env
+*db.sqlite3
 .venv
 EcommerceWebsite/.env
 # env/
