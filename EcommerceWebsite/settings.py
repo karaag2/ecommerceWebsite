@@ -29,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-# CSRF_TRUSTED_ORIGINS = [""]
+CSRF_TRUSTED_ORIGINS = ["*"]
 
 # Application definition
 
@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'zomona'
 ]
-ALLOWED_ORIGINS = ["http://localhost:3000",]
-
+ALLOWED_ORIGINS = ["*"]
+ALLOW_ALL_ORIGINS = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
