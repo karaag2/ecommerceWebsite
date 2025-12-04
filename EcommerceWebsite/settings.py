@@ -33,7 +33,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 # CSRF_TRUSTED_ORIGINS = ["*"]
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://ecommercewebsite-production-e9ac.up.railway.app',
+    'https://*.railway.app',
+]
 # Application definition
 
 INSTALLED_APPS = [
