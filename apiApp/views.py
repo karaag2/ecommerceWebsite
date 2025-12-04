@@ -1,5 +1,6 @@
 import stripe
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from django.shortcuts import render, get_object_or_404,HttpResponse
 from rest_framework.decorators import api_view 
@@ -7,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics, status, mixins
 from django.db.models import Q
 from rest_framework.response import Response
-from .models import CustomUser, Product, ProductCategory, Cart, CartItem, Review, Wishlist,Order, OrderItem
+from .models import CustomUser, Product, ProductCategory, Cart, CartItem, Review, Wishlist,Order, OrderItem, CustomerAddress
 from .serializers import (
     ProductListSerializer,
     ProductDetailedSerializer, 
@@ -16,12 +17,18 @@ from .serializers import (
     CartItemSerializer, 
     CartSerializer,
     ReviewSerializer,
-    WishlistSerializer
+    WishlistSerializer,
+    CustomerAddressSerializer,
+    OrderSerializer, 
+    ProductListSerializer, 
+    ReviewSerializer, SimpleCartSerializer, UserSerializer, WishlistSerializer
 )
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 stripe.api_key = settings.STRIPE_SECRET_KEY
 endpoint_secret = settings.WEBHOOK_SECRET
+
+User = get_user_model()
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.filter(featured=True)
     serializer_class = ProductListSerializer
@@ -316,6 +323,35 @@ def create_checkout_session(request):
 
 
 
+# @csrf_exempt
+# def my_webhook_view(request):
+#   payload = request.body
+#   sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+#   event = None
+
+#   try:
+#     event = stripe.Webhook.construct_event(
+#       payload, sig_header, endpoint_secret
+#     )
+#   except ValueError as e:
+#     # Invalid payload
+#     return HttpResponse(status=400)
+#   except stripe.error.SignatureVerificationError as e:
+#     # Invalid signature
+#     return HttpResponse(status=400)
+
+#   if (
+#     event['type'] == 'checkout.session.completed'
+#     or event['type'] == 'checkout.session.async_payment_succeeded'
+#   ):
+#     session = event['data']['object']
+#     cart_code = session.get("metadata", {}).get("cart_code")
+
+#     fulfill_checkout(session, cart_code)
+
+
+#   return HttpResponse(status=200)
+
 @csrf_exempt
 def my_webhook_view(request):
   payload = request.body
@@ -369,22 +405,47 @@ def fulfill_checkout(session, cart_code):
     cart.delete()
 
 
-def my_webhook(session,cart_code):
-    order = Order.objects.create(stripe_chekout_id=session["id"],
-                                amount  =session['ammount_total'],
-                                currency=session['currency'],
-                                customer_email=session['customer_email'],
-                                status='Paid'
-                                 )
-    
-    cart = Cart.objects.get(cart_code=cart_code)
-    Cartitems = cart.cartitems.all()
 
-    for item in cartitems:
-        orderitem = OrderItem.objects.create(order=order,
-                                             product=item.product,
-                                             quantity=item.quantity)
-    cart.delete
+
+
+# def fulfill_checkout(session, cart_code):
+    
+#     order = Order.objects.create(stripe_checkout_id=session["id"],
+#         amount=session["amount_total"],
+#         currency=session["currency"],
+#         customer_email=session["customer_email"],
+#         status="Paid")
+    
+
+#     print(session)
+
+
+#     cart = Cart.objects.get(cart_code=cart_code)
+#     cartitems = cart.cartitems.all()
+
+#     for item in cartitems:
+#         orderitem = OrderItem.objects.create(order=order, product=item.product, 
+#                                              quantity=item.quantity)
+    
+#     cart.delete()
+
+
+# def my_webhook(session,cart_code):
+#     order = Order.objects.create(stripe_chekout_id=session["id"],
+#                                 amount  =session['ammount_total'],
+#                                 currency=session['currency'],
+#                                 customer_email=session['customer_email'],
+#                                 status='Paid'
+#                                  )
+    
+#     cart = Cart.objects.get(cart_code=cart_code)
+#     cartitems = cart.cartitems.all()
+
+#     for item in cartitems:
+#         orderitem = OrderItem.objects.create(order=order,
+#                                              product=item.product,
+#                                              quantity=item.quantity)
+#     cart.delete
 
 @api_view(["POST"])
 def create_user(request):
